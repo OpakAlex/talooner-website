@@ -1,0 +1,74 @@
+baseURL = "https://talooner.dev/"
+locale = "en-us"
+title = "Talooner — Deterministic PR Review"
+theme = "PaperMod"
+
+enableRobotsTXT = true
+enableEmoji = true
+
+[params]
+  env = "production"
+  label = { text = "Talooner" }
+  description = "Talooner is a deterministic PR review bot. Your repo's rules decide the verdict — a model is consulted only where a rule asks for it, and its answer re-enters the engine as a typed fact."
+  keywords = ["talooner", "pr review", "code review bot", "tln", "opentalon", "deterministic", "automated qa"]
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  TocOpen = false
+  hideMeta = false
+  disableSpecial1stPost = true
+  hideSocialInFooter = true
+  DateFormat = "2006-01-02"
+
+  [params.homeInfoParams]
+    Title = "Rules decide. Not the model."
+    Content = "Talooner is a deterministic PR review bot for GitHub and GitLab. Your repository declares its review policy as `tln` rules; Talooner ingests PR facts, runs them through the inference engine, and executes the resulting actions. A model is consulted **only** where a rule says `do llm_review` — and its answer re-enters the engine as a typed fact. Same commit, same rules, same verdict — every time."
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/opentalon/talooner"
+
+  [params.assets]
+    disableHLJS = true
+
+[markup]
+  [markup.highlight]
+    style = "monokai"
+    lineNos = false
+    noClasses = true
+  [markup.goldmark.renderer]
+    unsafe = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[menu]
+  [[menu.main]]
+    identifier = "how-it-works"
+    name = "How it works"
+    url = "/how-it-works/"
+    weight = 10
+  [[menu.main]]
+    identifier = "automated-qa"
+    name = "Automated QA"
+    url = "/automated-qa/"
+    weight = 20
+  [[menu.main]]
+    identifier = "rules"
+    name = "Rules"
+    url = "/rules/"
+    weight = 30
+  [[menu.main]]
+    identifier = "blog"
+    name = "Blog"
+    url = "/blog/"
+    weight = 40
+  [[menu.main]]
+    identifier = "github"
+    name = "GitHub"
+    url = "https://github.com/opentalon/talooner"
+    weight = 50
