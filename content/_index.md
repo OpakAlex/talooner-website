@@ -30,6 +30,17 @@ and business rules, when a change might alter those rules. That lifts the code-r
 load off engineers and the testing load off QA, freeing them for product and
 architecture — while the product itself is preserved and improved.
 
+And when a rule genuinely needs a model's judgment, Talooner doesn't prompt a chat
+LLM and try to parse prose out of it. It calls [TypeSafe / Jev](https://typesafe.ai) —
+a machine-native model built for decisions, not conversation. Instead of a paragraph,
+it returns a **typed answer with calibrated confidence**: a *Choice* from a fixed set,
+a *Score* on a rubric, or a *true/false*. That answer re-enters the engine as a plain
+fact carrying a confidence number, so a rule can act on a confident verdict and
+escalate an uncertain one to a human — deterministically, and without a model ever
+having the final say. Typed and bounded, it fits Talooner's world far better than
+free-text output ever could, and it makes model verdicts cheap enough to run on every
+pull request.
+
 ## Example rules
 
 A taste of what a policy looks like. These are `tln` rules a repo drops into
@@ -202,19 +213,25 @@ rule "Flag UI that isn't in Figma at all" {
 }
 ```
 
-### Ask a model — only where a rule says so
+### Ask a model — powered by [TypeSafe / Jev](https://typesafe.ai)
+
+Where a rule asks for `llm_review`, Talooner calls TypeSafe and gets back a **typed**
+answer plus a confidence score — `llm.risk` (a Choice), `llm.doc_conformance` (a
+Score), `llm.matches_description` (true/false), each with an `*_confidence`. Rules gate
+on both the value and the confidence.
 
 ```talon
-rule "LLM review large core-domain PRs" {
+rule "Review large core-domain PRs with a typed model verdict" {
   for records where type == "pr"
     and attr "pr.lines_changed" >= 400
     and attr "module.touched_count" >= 1
     and attr "pr.diff_truncated" == false
-  do llm_review "pr"
+  do llm_review "pr"                        // → TypeSafe returns typed facts
   reason "large change to owned code"
   priority MEDIUM
 }
 
+// Choice: TypeSafe classifies risk as low | medium | high, with confidence.
 rule "Escalate risky auth diffs the model is confident about" {
   for records where type == "pr"
     and is "critical_path"
@@ -222,8 +239,38 @@ rule "Escalate risky auth diffs the model is confident about" {
     and attr "llm.risk_confidence" >= 0.9
   requires "review.security"
   do require "review.security"
-  do comment "pr" "Model flags this as high-risk (confidence {attr.llm.risk_confidence}) — security review required"
+  do comment "pr" "TypeSafe flags this as high-risk (confidence {attr.llm.risk_confidence}) — security review required"
   priority HIGH
+}
+
+// Score: TypeSafe rates how well the diff matches its module's docs, 0–5.
+rule "Block code that contradicts its own documentation" {
+  for records where type == "pr"
+    and attr "llm.doc_conformance" < 2
+    and attr "llm.doc_conformance_confidence" >= 0.85
+  block "merge"
+  do block "pr.merge"
+  do comment "pr" "TypeSafe scored doc-conformance {attr.llm.doc_conformance}/5 — the change contradicts the module docs"
+  reason "code diverges from documentation"
+  priority HIGH
+}
+
+// True/false: does the diff actually do what the PR description claims?
+rule "Flag PRs whose code doesn't match the description" {
+  for records where type == "pr"
+    and attr "llm.matches_description" == false
+    and attr "llm.matches_description_confidence" >= 0.8
+  do comment "pr" "TypeSafe thinks the diff doesn't match the description ({attr.llm.matches_description_confidence}) — reviewers should confirm scope"
+  reason "scope mismatch"
+  priority MEDIUM
+}
+
+// When TypeSafe isn't sure, don't guess — send it to a human.
+rule "Escalate low-confidence model verdicts" {
+  for records where type == "pr"
+    and attr "llm.risk_confidence" < 0.7
+  do comment "pr" "Model verdict was low-confidence — a human should take this one"
+  priority LOW
 }
 ```
 

@@ -9,7 +9,7 @@ enableEmoji = true
 [params]
   env = "production"
   label = { text = "Talooner" }
-  description = "Talooner is a deterministic PR review bot. Your repo's rules decide the verdict — a model is consulted only where a rule asks for it, and its answer re-enters the engine as a typed fact."
+  description = "Talooner is the first line of defense for your product — a deterministic guard for GitHub and GitLab that reviews code, checks design against Figma, and runs generated QA scenarios. Rules decide the verdict; a model is consulted only where a rule asks for it."
   keywords = ["talooner", "pr review", "code review bot", "tln", "opentalon", "deterministic", "automated qa"]
   defaultTheme = "auto"
   ShowReadingTime = false
@@ -24,8 +24,8 @@ enableEmoji = true
   DateFormat = "2006-01-02"
 
   [params.homeInfoParams]
-    Title = "Rules decide. Not the model."
-    Content = "Talooner is a deterministic PR review bot for GitHub and GitLab. Your repository declares its review policy as `tln` rules; Talooner ingests PR facts, runs them through the inference engine, and executes the resulting actions. A model is consulted **only** where a rule says `do llm_review` — and its answer re-enters the engine as a typed fact. Same commit, same rules, same verdict — every time."
+    Title = "The first line of defense for your product."
+    Content = "Talooner is a deterministic guard for GitHub and GitLab — and it's more than a review bot. Your repository declares its policy as `tln` rules; Talooner ingests PR facts, runs them through the inference engine, and executes the resulting actions: it reviews the diff, checks your UI against Figma, and generates and runs QA scenarios. A model is consulted **only** where a rule says `do llm_review` — and its answer re-enters the engine as a typed fact. Same commit, same rules, same verdict — every time."
 
   [[params.socialIcons]]
     name = "github"
