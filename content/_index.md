@@ -30,8 +30,6 @@ and business rules, when a change might alter those rules. That lifts the code-r
 load off engineers and the testing load off QA, freeing them for product and
 architecture — while the product itself is preserved and improved.
 
-- **[Blog →]({{< relref "/blog" >}})** — notes from building a deterministic reviewer.
-
 ## Example rules
 
 A taste of what a policy looks like. These are `tln` rules a repo drops into
