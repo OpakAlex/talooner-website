@@ -12,14 +12,13 @@ enableEmoji = true
   description = "Talooner is a deterministic PR review bot. Your repo's rules decide the verdict — a model is consulted only where a rule asks for it, and its answer re-enters the engine as a typed fact."
   keywords = ["talooner", "pr review", "code review bot", "tln", "opentalon", "deterministic", "automated qa"]
   defaultTheme = "auto"
-  ShowReadingTime = true
+  ShowReadingTime = false
   ShowShareButtons = false
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
-  ShowToc = true
-  TocOpen = false
-  hideMeta = false
+  ShowToc = false
+  hideMeta = true
   disableSpecial1stPost = true
   hideSocialInFooter = true
   DateFormat = "2006-01-02"
@@ -34,6 +33,11 @@ enableEmoji = true
 
   [params.assets]
     disableHLJS = true
+
+[minify]
+  # The HTML minifier rewrites inline-SVG numbers to scientific notation
+  # (1000 -> 1e3), which SVG attributes like viewBox reject. Keep SVG intact.
+  disableSVG = true
 
 [markup]
   [markup.highlight]
@@ -50,22 +54,22 @@ enableEmoji = true
   [[menu.main]]
     identifier = "how-it-works"
     name = "How it works"
-    url = "/how-it-works/"
+    pageRef = "/how-it-works/"
     weight = 10
   [[menu.main]]
     identifier = "automated-qa"
     name = "Automated QA"
-    url = "/automated-qa/"
+    pageRef = "/automated-qa/"
     weight = 20
   [[menu.main]]
     identifier = "rules"
     name = "Rules"
-    url = "/rules/"
+    pageRef = "/rules/"
     weight = 30
   [[menu.main]]
     identifier = "blog"
     name = "Blog"
-    url = "/blog/"
+    pageRef = "/blog/"
     weight = 40
   [[menu.main]]
     identifier = "github"

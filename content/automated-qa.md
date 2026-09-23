@@ -122,8 +122,111 @@ rule "Escalate thin QA coverage" {
   "verified working" from "we couldn't meaningfully exercise this" and route the
   second case to a human.
 
+## Generated scenarios are real tests
+
+The scenarios aren't a prose summary of "what to check" — they're executable tests
+the runner can actually run against the preview. A functional scenario, generated
+from the diff, the PR description, and the module's docs, comes out as a Jest test:
+
+```js
+// talooner-generated · scenario: "checkout rejects an expired coupon"
+// derived from: diff app/services/checkout/*, PR body, docs/checkout.md
+import { test, expect } from '@jest/globals';
+
+const DEPLOY = process.env.PREVIEW_URL;
+
+test('an expired coupon is rejected at checkout', async () => {
+  const res = await fetch(`${DEPLOY}/api/checkout`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ items: [{ sku: 'A1', qty: 1 }], coupon: 'EXPIRED2020' }),
+  });
+
+  expect(res.status).toBe(422);
+  const body = await res.json();
+  expect(body.error).toMatch(/coupon.*expired/i);
+});
+```
+
+The model proposed the case; Jest measures the outcome. `qa.scenarios_passed <
+qa.scenarios_total` is a fact, and the rules gate on it — a confident, wrong model
+can't turn a red suite green.
+
+## Design conformance: does the page match Figma?
+
+When a PR touches UI, Talooner can go past "does it work" to "does it look like the
+design". The `design_check` executor reads the referenced Figma nodes (reference image
++ design tokens), renders the changed components in the preview, and compares them —
+**both directions**:
+
+- **Drift from Figma** — a component whose pixels or tokens (color, spacing, type)
+  don't match its Figma source.
+- **Not in Figma** — components rendered on the page that have *no* matching Figma
+  component. Undocumented UI is drift too, and easy to miss in review.
+
+It folds the result into `design.*` facts:
+
+| Fact | Meaning |
+|---|---|
+| `design.figma_match` | every changed component matched its Figma source |
+| `design.pixel_drift` | worst-case visual difference, 0–1 |
+| `design.token_mismatches` | design tokens that didn't match (`color/primary`, `spacing/md`, …) |
+| `design.undocumented_count` | rendered components with **no** Figma source |
+| `design.undocumented_components` | which ones |
+| `design.match_confidence` | calibrated confidence in the verdict |
+
+The generated design scenario is a Jest + Playwright visual test:
+
+```js
+// talooner-generated · design scenario: "PriceCard vs Figma node 1284:57"
+import { test, expect } from '@jest/globals';
+import { chromium } from 'playwright';
+import { fetchFigmaNode, diffAgainstFigma, componentsOnPage } from '@talooner/figma-qa';
+
+const DEPLOY = process.env.PREVIEW_URL;
+
+test('PriceCard renders within 1% of its Figma component', async () => {
+  const ref = await fetchFigmaNode('1284:57');            // reference image + tokens
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.goto(`${DEPLOY}/components/price-card`);
+
+  const shot = await page.locator('[data-component="price-card"]').screenshot();
+  const { pixelDrift, tokenMismatches } = diffAgainstFigma(shot, ref);
+
+  expect(pixelDrift).toBeLessThan(0.01);
+  expect(tokenMismatches).toEqual([]);                    // colors/spacing/type match tokens
+  await browser.close();
+});
+
+test('every rendered component maps to a Figma component', async () => {
+  const rendered   = await componentsOnPage(`${DEPLOY}/pricing`);       // [data-component] nodes
+  const documented = await fetchFigmaNode('page:pricing').then(n => n.componentNames);
+  const orphans    = rendered.filter(c => !documented.includes(c));
+  expect(orphans).toEqual([]);   // UI with no Figma source is a finding, not a pass
+});
+```
+
+And the rule that catches the not-in-Figma case:
+
+```talon
+rule "Flag UI that isn't in Figma" {
+  for records where type == "pr"
+    and is "pr.touches_design"
+    and attr "design.undocumented_count" > 0
+  do require "review.design"
+  do comment "pr" "These rendered components have no Figma source: {attr.design.undocumented_components}. Add them to the design file, or remove them"
+  reason "undocumented UI"
+  priority MEDIUM
+}
+```
+
+Pair it with the drift and confidence rules on the [Rules](/rules/) page and a UI
+change is gated three ways: it must match Figma, contain nothing that *isn't* in
+Figma, and — when the check is unsure — go to a human.
+
 > **Roadmap, not shipped.** Automated QA is the design we're building toward. It
 > depends on the `do llm_review` path landing first, plus new executors
-> (`deploy_preview`, `qa_scenarios`) and the `qa.*` fact family. Today Talooner
-> extracts facts, evaluates rules, and executes review actions; the QA loop above is
-> where that goes next.
+> (`deploy_preview`, `qa_scenarios`, `design_check`) and the `qa.*` / `design.*` fact
+> families. Today Talooner extracts facts, evaluates rules, and executes review
+> actions; the QA loop above is where that goes next.
