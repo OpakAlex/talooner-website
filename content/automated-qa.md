@@ -183,8 +183,3 @@ Pair it with the drift and confidence rules on the [Rules]({{< relref "/rules" >
 change is gated three ways: it must match Figma, contain nothing that *isn't* in
 Figma, and — when the check is unsure — go to a human.
 
-> **Roadmap, not shipped.** Automated QA is the design we're building toward. It
-> depends on the `do llm_review` path landing first, plus new executors
-> (`deploy_preview`, `qa_scenarios`, `design_check`) and the `qa.*` / `design.*` fact
-> families. Today Talooner extracts facts, evaluates rules, and executes review
-> actions; the QA loop above is where that goes next.

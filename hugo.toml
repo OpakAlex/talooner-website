@@ -67,11 +67,6 @@ enableEmoji = true
     pageRef = "/rules/"
     weight = 30
   [[menu.main]]
-    identifier = "blog"
-    name = "Blog"
-    pageRef = "/blog/"
-    weight = 40
-  [[menu.main]]
     identifier = "github"
     name = "GitHub"
     url = "https://github.com/opentalon/talooner"
