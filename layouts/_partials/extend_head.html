@@ -1,0 +1,45 @@
+<style>
+  /* Left sidebar navigation — desktop only; the top menu is used on narrow screens. */
+  .tln-side { display: none; }
+
+  @media (min-width: 1024px) {
+    body { padding-left: 15rem; }
+
+    .tln-side {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      padding: 1.6rem 1rem;
+      border-right: 1px solid var(--border);
+      background: var(--theme);
+      overflow-y: auto;
+      z-index: 20;
+    }
+
+    .tln-side__brand {
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin: 0.2rem 0.6rem 1.1rem;
+      text-decoration: none;
+    }
+
+    .tln-side .link {
+      color: var(--primary);
+      padding: 0.5rem 0.6rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.2;
+      text-decoration: none;
+    }
+    .tln-side .link:hover { background: var(--tertiary); }
+    .tln-side .link.active { background: var(--tertiary); font-weight: 600; }
+
+    /* The top horizontal menu is redundant once the sidebar is shown. Keep the
+       brand + theme toggle in the header. */
+    header.header #menu { display: none; }
+  }
+</style>

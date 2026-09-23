@@ -14,10 +14,10 @@ engine, and executes the resulting actions against the GitHub or GitLab API.
 where a rule explicitly asks for it (`do llm_review …`), and its output re-enters
 the engine as a fact.
 
-- **[How it works →](/how-it-works/)** — the flow, end to end, and where a model fits.
-- **[Automated QA →](/automated-qa/)** — rules that decide to deploy and run LLM-generated test scenarios.
-- **[Rules →](/rules/)** — policy as code: versioned, diffable, unit-testable.
-- **[Blog →](/blog/)** — notes from building a deterministic reviewer.
+- **[How it works →]({{< relref "/how-it-works" >}})** — the flow, end to end, and where a model fits.
+- **[Automated QA →]({{< relref "/automated-qa" >}})** — rules that decide to deploy and run LLM-generated test scenarios.
+- **[Rules →]({{< relref "/rules" >}})** — policy as code: versioned, diffable, unit-testable.
+- **[Blog →]({{< relref "/blog" >}})** — notes from building a deterministic reviewer.
 
 > **Status: early v1.** The walking skeleton runs end to end. Several capabilities
 > described here — the `llm_review` path and Automated QA — are the design we're

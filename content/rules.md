@@ -147,7 +147,7 @@ rule "DBA review on migrations" {
 ### Design changes — require a design review, and check against Figma
 
 UI changes get their own path: a design review request **and** an automated Figma
-conformance check (see [Automated QA](/automated-qa/)). The check produces
+conformance check (see [Automated QA]({{< relref "/automated-qa" >}})). The check produces
 `design.*` facts the rules gate on.
 
 ```talon
@@ -319,7 +319,7 @@ talooner rules test     .github/talooner/
 - **`review.*`** — `human.approved`, `changes_requested`, `<team>.approved`, `<team>.stale`.
 - **`module.*`** — the primary touched module, its owner and docs.
 - **`llm.*` / `qa.*` / `design.*`** — verdicts a rule asked for, re-entering the engine
-  as facts. See [How it works](/how-it-works/) and [Automated QA](/automated-qa/).
+  as facts. See [How it works]({{< relref "/how-it-works" >}}) and [Automated QA]({{< relref "/automated-qa" >}}).
 
 Unset facts fail closed: a rule gated on a fact that wasn't asserted simply doesn't
 fire — the safe direction.

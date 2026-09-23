@@ -44,7 +44,7 @@ comes back **typed**, not as prose. Paired with a model like
 calibrated confidence, a rule can act on a confident verdict and escalate an unsure
 one to a human. The model informs the engine; it never overrides it.
 
-That same shape is what makes [Automated QA](/automated-qa/) possible: rules decide a
+That same shape is what makes [Automated QA]({{< relref "/automated-qa" >}}) possible: rules decide a
 PR is worth deploying, a model generates the test scenarios, the scenarios run, and
 the pass/fail results re-enter the engine as facts. The model proposes what to test —
 the rules decide what the results mean.

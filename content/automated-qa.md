@@ -221,7 +221,7 @@ rule "Flag UI that isn't in Figma" {
 }
 ```
 
-Pair it with the drift and confidence rules on the [Rules](/rules/) page and a UI
+Pair it with the drift and confidence rules on the [Rules]({{< relref "/rules" >}}) page and a UI
 change is gated three ways: it must match Figma, contain nothing that *isn't* in
 Figma, and — when the check is unsure — go to a human.
 

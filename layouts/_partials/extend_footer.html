@@ -1,0 +1,16 @@
+<aside class="tln-side" aria-label="Primary navigation">
+  <a class="tln-side__brand" href="{{ "" | relLangURL }}">{{ (site.Params.label.text) | default site.Title }}</a>
+  {{- range site.Menus.main }}
+  <a class="link" href="{{ .URL }}"{{ if .Params.rel }} rel="{{ .Params.rel }}"{{ end }}>{{ .Name }}</a>
+  {{- end }}
+</aside>
+<script>
+  (function () {
+    var here = location.pathname.replace(/\/+$/, "");
+    document.querySelectorAll(".tln-side .link").forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      var path = href.replace(/^https?:\/\/[^/]+/, "").replace(/\/+$/, "");
+      if (path && path === here) a.classList.add("active");
+    });
+  })();
+</script>
