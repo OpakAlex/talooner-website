@@ -26,49 +26,7 @@ enough to be safe — Talooner can:
 5. **Let the rules decide** what the outcome means: approve, comment the failures,
    request changes, escalate to a human, or tear the environment down.
 
-<div style="overflow-x:auto; margin:1.5rem 0;">
-<svg viewBox="0 0 1000 250" width="1000" style="max-width:100%; height:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; background:#0E1417; border-radius:14px;" role="img" aria-label="Automated QA loop: gate, deploy preview, generate scenarios, run, facts, verdict.">
-  <defs>
-    <marker id="q-det" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0 L10 5 L0 10 z" fill="#57C7D4"/>
-    </marker>
-    <marker id="q-prob" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0 L10 5 L0 10 z" fill="#E4A84C"/>
-    </marker>
-  </defs>
-  <!-- 5 stage boxes -->
-  <rect x="20"  y="90" width="160" height="72" rx="9" fill="#18242A" stroke="#2C4A50"/>
-  <text x="100" y="120" fill="#DCE6E9" font-size="13" text-anchor="middle" font-weight="600">Rule gate</text>
-  <text x="100" y="140" fill="#57C7D4" font-size="10" text-anchor="middle">deploy-worthy?</text>
-
-  <rect x="220" y="90" width="160" height="72" rx="9" fill="#18242A" stroke="#2C4A50"/>
-  <text x="300" y="120" fill="#DCE6E9" font-size="13" text-anchor="middle" font-weight="600">Preview deploy</text>
-  <text x="300" y="140" fill="#8FA1A9" font-size="10" text-anchor="middle">ephemeral env</text>
-
-  <rect x="420" y="90" width="160" height="72" rx="9" fill="#221B10" stroke="#4A3A1E"/>
-  <text x="500" y="116" fill="#DCE6E9" font-size="13" text-anchor="middle" font-weight="600">Generate</text>
-  <text x="500" y="134" fill="#E4A84C" font-size="10" text-anchor="middle">scenarios (LLM)</text>
-  <text x="500" y="150" fill="#8FA1A9" font-size="9" text-anchor="middle">from diff + docs</text>
-
-  <rect x="620" y="90" width="160" height="72" rx="9" fill="#18242A" stroke="#2C4A50"/>
-  <text x="700" y="120" fill="#DCE6E9" font-size="13" text-anchor="middle" font-weight="600">Run + measure</text>
-  <text x="700" y="140" fill="#57C7D4" font-size="10" text-anchor="middle">pass / fail</text>
-
-  <rect x="820" y="90" width="160" height="72" rx="9" fill="#18242A" stroke="#2C4A50"/>
-  <text x="900" y="116" fill="#DCE6E9" font-size="13" text-anchor="middle" font-weight="600">Verdict</text>
-  <text x="900" y="134" fill="#57C7D4" font-size="10" text-anchor="middle">rules decide</text>
-  <text x="900" y="150" fill="#8FA1A9" font-size="9" text-anchor="middle">approve / escalate</text>
-
-  <line x1="180" y1="126" x2="216" y2="126" stroke="#57C7D4" stroke-width="2" marker-end="url(#q-det)"/>
-  <line x1="380" y1="126" x2="416" y2="126" stroke="#57C7D4" stroke-width="2" marker-end="url(#q-det)"/>
-  <line x1="580" y1="126" x2="616" y2="126" stroke="#E4A84C" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#q-prob)"/>
-  <line x1="780" y1="126" x2="816" y2="126" stroke="#57C7D4" stroke-width="2" marker-end="url(#q-det)"/>
-
-  <text x="500" y="40" fill="#63767E" font-size="12" text-anchor="middle" letter-spacing="1.5">AUTOMATED QA LOOP</text>
-  <text x="500" y="205" fill="#63767E" font-size="10.5" text-anchor="middle">solid = deterministic · dashed = the model proposes scenarios, it never scores them</text>
-  <text x="500" y="224" fill="#63767E" font-size="10.5" text-anchor="middle">results re-enter the engine as qa.* facts → the ruleset gates the merge</text>
-</svg>
-</div>
+{{< diagram src="img/automated-qa.svg" alt="Automated QA loop: rule gate, preview deploy, generate scenarios, run and measure, verdict." >}}
 
 ## What it looks like in a ruleset
 
