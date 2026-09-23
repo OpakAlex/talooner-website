@@ -4,19 +4,32 @@ title: "Talooner"
 
 ## What Talooner is
 
-Generic "ask an LLM to review this diff" doesn't solve the real problem: review is
-company-specific, and a bare prompt can't encode that. Talooner makes the policy
-explicit. A repository declares its review policy as [`tln`](https://tln-lang.org)
-rules. Talooner ingests the PR's facts, runs the rules through the inference
-engine, and executes the resulting actions against the GitHub or GitLab API.
+*"Every line of code should map to a business need."* With the arrival of LLMs, that
+truth only grows more important for building products. So how can a business be sure
+the product does exactly what it should? The universal answer is testing — whether by
+a person or by automated tests, they are the only thing that tells you whether the
+code really works the way it's meant to.
 
-**No model decides whether a PR is approved — rules do.** A model is consulted only
-where a rule explicitly asks for it (`do llm_review …`), and its output re-enters
-the engine as a fact.
+The problem is that every open pull request — every change, even one or two lines —
+can trigger irreversible, damaging reactions from users, and with them, damage to the
+business.
 
-- **[How it works →]({{< relref "/how-it-works" >}})** — the flow, end to end, and where a model fits.
-- **[Automated QA →]({{< relref "/automated-qa" >}})** — rules that decide to deploy and run LLM-generated test scenarios.
-- **[Rules →]({{< relref "/rules" >}})** — policy as code: versioned, diffable, unit-testable.
+So what does Talooner offer? It sets out to unify business needs with the work of
+developers — or, in 2026, agents. With AI agents, code gets written fast. But how do
+you know the agent produced a genuinely correct solution — that it didn't hallucinate,
+or cover the code with tests only for show? This is where code review becomes central:
+we put a human in the loop to make the call. But how much does that really simplify
+things? How much does it speed them up? If AI writes the code, why can't AI also review
+that code, test it, and deploy it?
+
+Talooner offers exactly that — full automation from review to deploy. It lets AI make
+decisions on its own and — based only on **rules, not prompts** — pull in specific
+people for extra review when they're actually needed. It knows how to spot a component
+that doesn't exist in the Figma design. It understands, from the company's own rules
+and business rules, when a change might alter those rules. That lifts the code-review
+load off engineers and the testing load off QA, freeing them for product and
+architecture — while the product itself is preserved and improved.
+
 - **[Blog →]({{< relref "/blog" >}})** — notes from building a deterministic reviewer.
 
 ## Example rules
